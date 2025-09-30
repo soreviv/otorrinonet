@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://otorrinonet.com/sitemap.xml
+
+# Bloquear archivos innecesarios
+Disallow: /_header.html
+Disallow: /_footer.html
+Disallow: /css/
+Disallow: /js/
+
+# Permitir páginas importantes
+Allow: /index.html
+Allow: /servicios.html
+Allow: /agendar-cita.html
+Allow: /contacto.html
