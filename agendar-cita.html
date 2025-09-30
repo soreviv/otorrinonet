@@ -1,19 +1,12 @@
-<!-- _header.html -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Agende su cita con el Dr. Alejandro Viveros Dominguez - Especialista en Otorrinolaringología en CDMX">
+    <meta name="description" content="Agende su cita con el Dr. Alejandro Viveros Dominguez, especialista en Otorrinolaringología.">
     <meta name="keywords" content="agendar cita, otorrinolaringología, CDMX, Dr. Alejandro Viveros">
-    <meta name="author" content="Dr. Alejandro Viveros Dominguez">
-    <meta property="og:title" content="Agendar Cita - Dr. Alejandro Viveros">
-    <meta property="og:description" content="Agende su cita en línea con el Dr. Alejandro Viveros, especialista en Otorrinolaringología en CDMX.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://otorrinonet.com/agendar-cita.html">
-    <link rel="canonical" href="https://otorrinonet.com/agendar-cita.html">
     <title>Agendar Cita - Dr. Alejandro Viveros</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -29,7 +22,7 @@
             <nav class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link">Inicio</a>
                 <a href="servicios.html" class="nav-link">Servicios</a>
-                <a href="agendar-cita.html" class="nav-link">Agendar Cita</a>
+                <a href="agendar-cita.html" class="nav-link active">Agendar Cita</a>
                 <a href="contacto.html" class="nav-link">Contacto</a>
                 <a href="rinoplastia.html" class="nav-link">Rinoplastia</a>
             </nav>
@@ -41,105 +34,49 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Agendar Cita</h1>
-            <p>Programe su consulta con el Dr. Alejandro Viveros Dominguez</p>
-            <a href="index.html" class="btn">Volver al Inicio</a>
-        </div>
-    </section>
+    <!-- Scheduler Section -->
+    <main class="container">
+        <section class="scheduler">
+            <h1 class="section-title">Agendar una Cita</h1>
+            <p class="section-subtitle">Seleccione una fecha y un horario para su consulta.</p>
+            
+            <div class="scheduler-flex-container">
+                <!-- Calendario se renderizará aquí -->
+                <div id="calendar-container"></div>
 
-    <!-- Appointment Form Section -->
-    <section class="services" id="appointment-form-section">
-        <div class="container">
-            <h2 class="section-title">Formulario de Cita</h2>
-            <div class="appointment-form">
-                <div class="notification success" id="successNotification">
-                    ¡Su cita ha sido agendada exitosamente! Nos pondremos en contacto con usted pronto.
+                <!-- Horarios disponibles se renderizarán aquí -->
+                <div id="slots-container">
+                    <p>Seleccione una fecha para ver los horarios disponibles.</p>
                 </div>
-                <div class="notification error" id="errorNotification">
-                    Ha ocurrido un error al agendar su cita. Por favor, intente nuevamente.
-                </div>
-                <form id="appointmentForm">
+            </div>
+
+            <!-- Formulario de reserva (inicialmente oculto) -->
+            <div id="booking-form-container" style="display: none;">
+                <h3>Confirmar su Cita</h3>
+                <p>Usted está agendando para el <strong id="booking-time"></strong>.</p>
+                <form id="booking-form">
                     <div class="form-group">
-                        <label for="name">Nombre Completo *</label>
-                        <input type="text" id="name" class="form-control" required>
-                        <div class="error-message" id="nameError">Por favor ingrese su nombre completo</div>
+                        <label for="name">Nombre Completo:</label>
+                        <input type="text" id="name" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" class="form-control" required>
-                        <div class="error-message" id="emailError">Por favor ingrese un email válido</div>
+                        <label for="reason">Motivo de la Consulta (opcional):</label>
+                        <textarea id="reason" name="reason" rows="3"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Teléfono *</label>
-                        <input type="tel" id="phone" class="form-control" required>
-                        <div class="error-message" id="phoneError">Por favor ingrese un número de teléfono válido</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Fecha de Cita *</label>
-                        <input type="date" id="date" class="form-control" required>
-                        <div class="error-message" id="dateError">Por favor seleccione una fecha válida</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="time">Hora de Cita *</label>
-                        <select id="time" class="form-control" required>
-                            <option value="">Seleccione una hora</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="16:00">4:00 PM</option>
-                            <option value="17:00">5:00 PM</option>
-                            <option value="18:00">6:00 PM</option>
-                            <option value="19:00">7:00 PM</option>
-                        </select>
-                        <div class="error-message" id="timeError">Por favor seleccione una hora válida</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">Motivo de la Cita</label>
-                        <textarea id="reason" class="form-control" rows="4" placeholder="Describa brevemente el motivo de su consulta"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <div class="h-captcha" data-sitekey="your-hcaptcha-site-key"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Agendar Cita</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Cita</button>
                 </form>
             </div>
-        </div>
-    </section>
 
-    <!-- Doctor Info Brief -->
-    <section class="doctor-info">
-        <div class="container">
-            <div class="doctor-content">
-                <div class="doctor-details">
-                    <h3>Dr. Alejandro Viveros Dominguez</h3>
-                    <p><strong>Especialidad:</strong> Otorrinolaringología y Cirugía de Cabeza y Cuello</p>
-                    <p><strong>Experiencia:</strong> Más de 10 años</p>
-                    <p><strong>Horarios:</strong> Lunes a Miércoles 16:00-20:00, Jueves-Viernes 10:00-13:00</p>
-                </div>
-                <img src="https://placehold.co/300x400/1a73e8/ffffff?text=Dr.+Viveros" alt="Dr. Alejandro Viveros" class="doctor-image">
+            <!-- Mensaje de Confirmación (inicialmente oculto) -->
+            <div id="confirmation-message" class="confirmation-box" style="display: none;">
+                <h3>¡Cita Agendada Exitosamente!</h3>
+                <p>Gracias, <strong id="conf-name"></strong>. Hemos confirmado su cita para el <strong id="conf-time"></strong>.</p>
+                <p>Recibirá un recordatorio por correo electrónico.</p>
+                <a href="index.html" class="btn">Volver al Inicio</a>
             </div>
-        </div>
-    </section>
 
-    <!-- _footer.html -->
-    <!-- WhatsApp Button -->
-    <a href="https://wa.me/525512345678" class="whatsapp-btn" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <!-- Cookie Banner -->
-    <div class="cookie-banner" id="cookieBanner">
-        <div class="cookie-content">
-            <p>Este sitio web utiliza cookies para mejorar su experiencia. Al continuar navegando, acepta nuestra <a href="politica-cookies.html" style="color: white; text-decoration: underline;">Política de Cookies</a>.</p>
-        </div>
-        <div class="cookie-buttons">
-            <button class="cookie-btn accept-btn" id="acceptCookies">Aceptar</button>
-            <button class="cookie-btn decline-btn" id="declineCookies">Rechazar</button>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -181,6 +118,6 @@
     </footer>
 
     <script src="js/main.js"></script>
-    <script src="js/cookie_banner.js"></script>
+    <script src="js/agendar-cita.js"></script>
 </body>
 </html>
