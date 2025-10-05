@@ -87,7 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAvailability(date) {
         slotsContainer.innerHTML = '<p>Cargando horarios...</p>';
         bookingFormContainer.style.display = 'none';
-        const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        // Corrección: Formatear la fecha en la zona horaria local para evitar errores de un día.
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Meses son 0-indexados
+        const day = date.getDate().toString().padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 
         try {
             const response = await fetch(`/api/availability?date=${dateString}`);
