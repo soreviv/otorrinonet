@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -7,6 +6,7 @@ const helmet = require('helmet');
 const { initDatabase } = require('./utils/database');
 const citasRoutes = require('./routes/citas');
 const availabilityRoutes = require('./routes/availability');
+const contactoRoutes = require('./routes/contacto'); // Importar la nueva ruta
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +19,7 @@ app.use(express.json()); // Para parsear body de peticiones como JSON
 // Rutas de la API
 app.use('/api/citas', citasRoutes);
 app.use('/api/availability', availabilityRoutes);
+app.use('/api/contacto', contactoRoutes); // Usar la nueva ruta de contacto
 
 // Ruta raíz de bienvenida
 app.get('/', (req, res) => {
