@@ -167,10 +167,10 @@ echo "Nginx configurado."
 # --- Importar Esquema de la Base de Datos ---
 echo "--- Importando esquema de la base de datos... ---"
 # Comprobación para evitar error si la tabla ya existe
-if sudo -u $DB_USER psql -d $DB_NAME -c '\dt' | grep -q 'appointments'; then
+if sudo -u postgres psql -U $DB_USER -d $DB_NAME -c '\dt' | grep -q 'appointments'; then
     echo "El esquema de la base de datos parece ya haber sido importado. Omitiendo."
 else
-    sudo -u $DB_USER psql -d $DB_NAME < "$PROJECT_DIR/database_schema.sql"
+    sudo -u postgres psql -U $DB_USER -d $DB_NAME < "$PROJECT_DIR/database_schema.sql"
     echo "Esquema de la base de datos importado."
 fi
 
