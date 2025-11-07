@@ -18,11 +18,10 @@ class AppointmentController extends BaseController
      */
     public function create()
     {
-        $status = $_SESSION['status'] ?? null;
-        $errors = $_SESSION['errors'] ?? [];
-        $old_data = $_SESSION['old_data'] ?? [];
-
-        unset($_SESSION['status'], $_SESSION['errors'], $_SESSION['old_data']);
+        // Recuperar datos de la sesión para mostrarlos en la vista.
+        $status = $_SESSION['appointment_status'] ?? null;
+        $errors = $_SESSION['appointment_errors'] ?? [];
+        $old_data = $_SESSION['appointment_old_data'] ?? [];
 
         $data = [
             'pageTitle' => 'Agendar Cita',
@@ -30,6 +29,9 @@ class AppointmentController extends BaseController
             'errors' => $errors,
             'old_data' => $old_data
         ];
+
+        // Limpiar solo las variables de sesión específicas de este formulario.
+        unset($_SESSION['appointment_status'], $_SESSION['appointment_errors'], $_SESSION['appointment_old_data']);
 
         echo $this->renderView('agendar-cita', $data);
     }
@@ -67,9 +69,9 @@ class AppointmentController extends BaseController
         }
 
         if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
-            $_SESSION['old_data'] = $data;
-            $_SESSION['status'] = ['type' => 'error', 'message' => 'Por favor, corrige los errores en el formulario.'];
+            $_SESSION['appointment_errors'] = $errors;
+            $_SESSION['appointment_old_data'] = $data;
+            $_SESSION['appointment_status'] = ['type' => 'error', 'message' => 'Por favor, corrige los errores en el formulario.'];
 
             header('Location: /agendar-cita');
             exit;
@@ -78,19 +80,19 @@ class AppointmentController extends BaseController
         $appointmentModel = new AppointmentModel();
         if (!$appointmentModel->isTimeSlotAvailable($data['fecha_cita'], $data['hora_cita'])) {
             $errors['hora_cita'] = 'Este horario ya no está disponible. Por favor, selecciona otro.';
-            $_SESSION['errors'] = $errors;
-            $_SESSION['old_data'] = $data;
-            $_SESSION['status'] = ['type' => 'error', 'message' => 'El horario seleccionado ya no está disponible.'];
+            $_SESSION['appointment_errors'] = $errors;
+            $_SESSION['appointment_old_data'] = $data;
+            $_SESSION['appointment_status'] = ['type' => 'error', 'message' => 'El horario seleccionado ya no está disponible.'];
 
             header('Location: /agendar-cita');
             exit;
         }
 
         if ($appointmentModel->create($data)) {
-            $_SESSION['status'] = ['type' => 'success', 'message' => '¡Tu cita ha sido agendada con éxito! Nos pondremos en contacto contigo para confirmar.'];
+            $_SESSION['appointment_status'] = ['type' => 'success', 'message' => '¡Tu cita ha sido agendada con éxito! Nos pondremos en contacto contigo para confirmar.'];
         } else {
-            $_SESSION['status'] = ['type' => 'error', 'message' => 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.'];
-            $_SESSION['old_data'] = $data;
+            $_SESSION['appointment_status'] = ['type' => 'error', 'message' => 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.'];
+            $_SESSION['appointment_old_data'] = $data;
         }
 
         header('Location: /agendar-cita');
