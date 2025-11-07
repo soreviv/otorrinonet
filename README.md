@@ -1,60 +1,86 @@
 # OtorrinoNet
 
-OtorrinoNet is a web application for scheduling medical appointments for an ENT (ear, nose, and throat) doctor's office. It allows patients to schedule appointments, and provides an admin panel for managing appointments and contact messages.
+OtorrinoNet es una aplicación web para agendar citas médicas en un consultorio de otorrinolaringología. Permite a los pacientes reservar citas y proporciona un panel de administración para gestionar tanto las citas como los mensajes de contacto.
 
-## Features
+## Características
 
-- **Appointment Scheduling:** Patients can schedule appointments through a simple form.
-- **Admin Panel:** An admin panel for managing appointments and contact messages.
-- **Contact Form:** A contact form for patients to send messages to the doctor's office.
-- **Dynamic Time Slots:** The application dynamically calculates and displays available time slots for appointments.
+- **Agendamiento de Citas:** Los pacientes pueden agendar citas a través de un formulario sencillo.
+- **Panel de Administración:** Un panel para gestionar citas y mensajes de contacto.
+- **Formulario de Contacto:** Un formulario para que los pacientes envíen mensajes al consultorio.
+- **Horarios Dinámicos:** La aplicación calcula y muestra dinámicamente los horarios disponibles.
 
-## Getting Started
+---
 
-### Prerequisites
+## Despliegue en Producción (Ubuntu 24.04)
 
-- PHP 8.0 or higher
+Este método utiliza un script para automatizar la configuración en un servidor limpio de Ubuntu 24.04.
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/soreviv/otorrinonet.git
+    cd otorrinonet
+    ```
+
+2.  **Hacer ejecutable y correr el script de despliegue:**
+    El script te pedirá la contraseña para el usuario de la base de datos durante la ejecución.
+    ```bash
+    chmod +x deploy.sh
+    sudo ./deploy.sh
+    ```
+
+3.  **Acciones manuales post-despliegue:**
+    Una vez que el script finalice, solo quedan dos pasos manuales:
+
+    -   **Añadir la clave de hCaptcha:**
+        Edita el archivo de entorno y añade tu clave secreta de hCaptcha.
+        ```bash
+        sudo nano /var/www/otorrinonet/.env
+        ```
+
+    -   **Configurar SSL (HTTPS):**
+        El script te proporcionará el comando exacto para instalar un certificado SSL gratuito con Certbot. Se recomienda encarecidamente hacerlo para proteger tu sitio.
+
+---
+
+## Instalación para Desarrollo Local
+
+Sigue estos pasos para configurar el proyecto en tu máquina local para desarrollo y pruebas.
+
+### Prerrequisitos
+
+- PHP 8.0 o superior
 - PostgreSQL
 - Composer
-- A web server such as Nginx or Apache
+- Un servidor web como Nginx o Apache
 
-### Installation
+### Pasos
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/otorrinonet.com.git
-   cd otorrinonet.com
-   ```
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/soreviv/otorrinonet.git
+    cd otorrinonet
+    ```
 
-2. **Install dependencies:**
-   ```bash
-   composer install
-   ```
+2.  **Instalar dependencias:**
+    ```bash
+    composer install
+    ```
 
-3. **Set up the database:**
-   - Create a PostgreSQL database.
-   - Import the database schema from `database_schema.sql`.
+3.  **Configurar la base de datos:**
+    - Crea una base de datos en PostgreSQL.
+    - Importa el esquema desde `database_schema.sql`.
 
-4. **Configure the environment:**
-   - Copy the `.env.example` file to `.env`:
-     ```bash
-     cp .env.example .env
-     ```
-   - Update the `.env` file with your database credentials and hCaptcha secret key.
+4.  **Configurar el entorno:**
+    - Copia `.env.example` a `.env`:
+      ```bash
+      cp .env.example .env
+      ```
+    - Actualiza el archivo `.env` con las credenciales de tu base de datos local y tu clave de hCaptcha.
 
-5. **Configure your web server:**
-   - Configure your web server to serve the `public` directory.
-   - Ensure that the web server is configured to handle PHP files.
+5.  **Configurar el servidor web:**
+    - Apunta el Document Root de tu servidor web al directorio `public/`.
+    - Asegúrate de que el servidor esté configurado para procesar archivos PHP.
 
-## Usage
+## Contribuciones
 
-- The main application is accessible at the root URL of your server.
-- The admin panel is accessible at `/admin`.
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Las pull requests son bienvenidas. Para cambios importantes, por favor abre un issue primero para discutir lo que te gustaría cambiar.
