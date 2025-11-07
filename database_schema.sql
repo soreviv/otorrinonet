@@ -411,9 +411,9 @@ REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL FUNCTIONS IN SCHEMA public FROM PUBLIC;
 
 -- Otorgar permisos al usuario de la aplicación
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO drviverosorl;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO drviverosorl;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO drviverosorl;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO otorrinonet_user;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO otorrinonet_user;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO otorrinonet_user;
 
 -- ============================================
 -- DATOS DE PRUEBA (Opcional - Comentar en producción)
