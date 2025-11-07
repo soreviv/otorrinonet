@@ -12,7 +12,8 @@
     "require": {
         "php": ">=8.3",
         "vlucas/phpdotenv": "^5.6",
-        "ext-pdo_pgsql": "*"
+        "ext-pdo_pgsql": "*",
+        "phpmailer/phpmailer": "^6.9"
     },
     "autoload": {
         "psr-4": {
