@@ -34,9 +34,9 @@ echo "--- Iniciando el despliegue de OtorrinoNet en $DOMAIN_NAME ---"
 # --- 1. Instalación de Dependencias del Servidor ---
 echo "--- Paso 1/8: Instalando dependencias del servidor... ---"
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y nginx git postgresql postgresql-contrib \
+sudo apt install -y nginx git postgresql postgresql-contrib unzip \
                     php$PHP_VERSION-fpm php$PHP_VERSION-pgsql php$PHP_VERSION-mbstring \
-                    php$PHP_VERSION-xml php$PHP_VERSION-curl
+                    php$PHP_VERSION-xml php$PHP_VERSION-curl php$PHP_VERSION-zip
 
 # Instalar Composer
 if ! command -v composer &> /dev/null; then
@@ -112,7 +112,7 @@ echo "Permisos configurados."
 
 # --- 7. Instalación de Dependencias de PHP ---
 echo "--- Paso 7/8: Instalando dependencias de PHP con Composer... ---"
-sudo -u www-data composer install --no-dev --optimize-autoloader -d "$PROJECT_DIR"
+sudo -u www-data composer install --no-interaction --no-cache --no-dev --optimize-autoloader -d "$PROJECT_DIR"
 echo "Dependencias de PHP instaladas."
 
 # --- 8. Configuración de Nginx ---
