@@ -6,7 +6,7 @@
 define('DB_HOST', '127.0.0.1');
 define('DB_PORT', '5432');
 define('DB_NAME', 'otorrinonet_db');
-define('DB_USER', 'drviverosorl');
+define('DB_USER', 'otorrinonet_user');
 define('DB_PASS', 'your_strong_password');
 
 // Opcional: Configuración de PDO

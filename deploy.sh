@@ -71,15 +71,15 @@ sudo apt install -y nginx git postgresql postgresql-contrib unzip \
                     echo
                     
                     # Crear usuario y base de datos si no existen
-                    if ! sudo -u postgres psql -t -c "\du" | grep -q $DB_USER; then
-                        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
+                    if ! psql -t -c "\du" | grep -q $DB_USER; then
+                        psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
                     else
                         echo "El usuario $DB_USER ya existe en PostgreSQL."
                     fi
                     
-                    if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
-                        sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
-                        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
+                    if ! psql -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
+                        psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
+                        psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
                     else
                         echo "La base de datos $DB_NAME ya existe."
                     fi
@@ -121,7 +121,7 @@ echo "Dependencias de PHP instaladas."
 
 # Importar el esquema de la base de datos
 echo "Importando esquema de la base de datos..."
-sudo -u postgres psql -d "$DB_NAME" < "$PROJECT_DIR/database_schema.sql"
+psql -d "$DB_NAME" -f "$PROJECT_DIR/database_schema.sql"
 echo "Esquema de la base de datos importado."
 
 # --- 8. Configuración de Nginx ---
