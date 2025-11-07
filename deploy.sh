@@ -34,88 +34,98 @@ echo "--- Iniciando el despliegue de OtorrinoNet en $DOMAIN_NAME ---"
 echo "--- Paso 1/7: Instalando dependencias del servidor... ---"
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx git postgresql postgresql-contrib unzip \
-                    php$PHP_VERSION-fpm php$PHP_VERSION-pgsql php$PHP_VERSION-mbstring \
-                    php$PHP_VERSION-xml php$PHP_VERSION-curl php$PHP_VERSION-zip
-
-# Instalar Composer
-if ! command -v composer &> /dev/null; then
-    echo "Instalando Composer..."
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    php composer-setup.php
-    php -r "unlink('composer-setup.php');"
-    sudo mv composer.phar /usr/local/bin/composer
-else
-    echo "Composer ya está instalado."
-fi
-echo "Dependencias del servidor instaladas."
-
-# --- 2. Preparación del Directorio del Proyecto ---
-echo "--- Paso 2/7: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
-if [ ! -d "$PROJECT_DIR" ]; then
-    echo "Clonando el repositorio..."
-    sudo git clone "$REPO_URL" "$PROJECT_DIR"
-else
-    echo "El directorio del proyecto ya existe. Actualizando desde Git..."
-    sudo git -C "$PROJECT_DIR" pull
-fi
-echo "Directorio del proyecto listo."
-
-# --- 3. Configuración de Seguridad de Git ---
-echo "--- Paso 3/7: Configurando el directorio como seguro para Git... ---"
-sudo git config --global --add safe.directory $PROJECT_DIR
-echo "Directorio añadido a la configuración segura de Git."
-
-# --- 4. Configuración de la Base de Datos ---
-echo "--- Paso 4/7: Configurando la base de datos PostgreSQL... ---"
-read -s -p "Por favor, introduce una contraseña para el usuario de la base de datos ($DB_USER): " DB_PASSWORD
-echo
-
-# Crear usuario y base de datos si no existen
-if ! sudo -u postgres psql -t -c "\du" | grep -q $DB_USER; then
-    sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
-else
-    echo "El usuario $DB_USER ya existe en PostgreSQL."
-fi
-
-if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
-    sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
-    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-else
-    echo "La base de datos $DB_NAME ya existe."
-fi
-echo "Base de datos configurada."
-
-# --- 5. Configuración del Entorno (.env) ---
-echo "--- Paso 5/7: Configurando el archivo .env... ---"
-ENV_FILE="$PROJECT_DIR/.env"
-if [ ! -f "$ENV_FILE" ]; then
-    sudo cp "$PROJECT_DIR/.env.example" "$ENV_FILE"
-    # Reemplazar valores en el .env
-    sudo sed -i "s/DB_HOST=localhost/DB_HOST=localhost/" "$ENV_FILE"
-    sudo sed -i "s/DB_PORT=5432/DB_PORT=5432/" "$ENV_FILE"
-    sudo sed -i "s/DB_NAME=otorrinonet_db/DB_NAME=$DB_NAME/" "$ENV_FILE"
-    sudo sed -i "s/DB_USER=drviverosorl/DB_USER=$DB_USER/" "$ENV_FILE"
-    sudo sed -i "s/DB_PASSWORD=tu_contraseña_segura/DB_PASSWORD=$DB_PASSWORD/" "$ENV_FILE"
-    sudo sed -i "s/HCAPTCHA_SECRET_KEY=/HCAPTCHA_SECRET_KEY=/" "$ENV_FILE" # Dejar vacío para rellenar manualmente
-    echo "Archivo .env creado. No olvides añadir tu HCAPTCHA_SECRET_KEY."
-else
-    echo "El archivo .env ya existe. Omitiendo creación."
-fi
-
-# --- 6. Configuración de Permisos ---
-echo "--- Paso 6/7: Configurando permisos de archivos y directorios... ---"
+                                        php$PHP_VERSION-fpm php$PHP_VERSION-pgsql php$PHP_VERSION-mbstring \
+                                        php$PHP_VERSION-xml php$PHP_VERSION-curl php$PHP_VERSION-zip php$PHP_VERSION-gd
+                    
+                    # Instalar Composer
+                    if ! command -v composer &> /dev/null; then
+                        echo "Instalando Composer..."
+                        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+                        php composer-setup.php
+                        php -r "unlink('composer-setup.php');"
+                        sudo mv composer.phar /usr/local/bin/composer
+                    else
+                        echo "Composer ya está instalado."
+                    fi
+                    echo "Dependencias del servidor instaladas."
+                    
+                    # --- 2. Preparación del Directorio del Proyecto ---
+                    echo "--- Paso 2/8: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
+                    if [ ! -d "$PROJECT_DIR" ]; then
+                        echo "Clonando el repositorio..."
+                        sudo git clone "$REPO_URL" "$PROJECT_DIR"
+                    else
+                        echo "El directorio del proyecto ya existe. Actualizando desde Git..."
+                        sudo git -C "$PROJECT_DIR" pull
+                    fi
+                    echo "Directorio del proyecto listo."
+                    
+                    # --- 3. Configuración de Seguridad de Git ---
+                    echo "--- Paso 3/8: Configurando el directorio como seguro para Git... ---"
+                    sudo git config --global --add safe.directory $PROJECT_DIR
+                    echo "Directorio añadido a la configuración segura de Git."
+                    
+                    # --- 4. Configuración de la Base de Datos ---
+                    echo "--- Paso 4/8: Configurando la base de datos PostgreSQL... ---"
+                    read -s -p "Por favor, introduce una contraseña para el usuario de la base de datos ($DB_USER): " DB_PASSWORD
+                    echo
+                    
+                    # Crear usuario y base de datos si no existen
+                    if ! sudo -u postgres psql -t -c "\du" | grep -q $DB_USER; then
+                        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
+                    else
+                        echo "El usuario $DB_USER ya existe en PostgreSQL."
+                    fi
+                    
+                    if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
+                        sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
+                        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
+                    else
+                        echo "La base de datos $DB_NAME ya existe."
+                    fi
+                    echo "Base de datos configurada."
+                    
+                    # --- 5. Configuración del Entorno (.env) ---
+                    echo "--- Paso 5/8: Configurando el archivo .env... ---
+                    COMPOSER_HOME="$PROJECT_DIR/.composer"
+                    "
+                    ENV_FILE="$PROJECT_DIR/.env"
+                    if [ ! -f "$ENV_FILE" ]; then
+                        sudo cp "$PROJECT_DIR/.env.example" "$ENV_FILE"
+                        # Reemplazar valores en el .env
+                        sudo sed -i "s/^DB_HOST=.*/DB_HOST=localhost/" "$ENV_FILE""
+                        sudo sed -i "s/^DB_PORT=.*/DB_PORT=5432/" "$ENV_FILE""
+                        sudo sed -i "s/^DB_NAME=.*/DB_NAME=$DB_NAME/" "$ENV_FILE""
+                        sudo sed -i "s/^DB_USER=.*/DB_USER=$DB_USER/" "$ENV_FILE""
+                        sudo sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$DB_PASSWORD/" "$ENV_FILE""
+                        sudo sed -i "s/^HCAPTCHA_SECRET_KEY=.*/HCAPTCHA_SECRET_KEY=/" "$ENV_FILE""
+                        echo "Archivo .env creado. No olvides añadir tu HCAPTCHA_SECRET_KEY."
+                    else
+                        echo "El archivo .env ya existe. Omitiendo creación."
+                    fi
+                    
+                    # --- 6. Configuración de Permisos ---
+                    echo "--- Paso 6/8: Configurando permisos de archivos y directorios... ---
+                    "
 sudo chown -R www-data:www-data "$PROJECT_DIR"
 sudo find "$PROJECT_DIR" -type f -exec chmod 640 {} \;
 sudo find "$PROJECT_DIR" -type d -exec chmod 750 {} \;
 echo "Permisos configurados."
 
-# --- 7. Instalación de Dependencias de PHP ---
-echo "--- Paso 7/7: Instalando dependencias de PHP con Composer... ---"
-sudo -u www-data composer install --no-interaction --no-cache --no-dev --optimize-autoloader -d "$PROJECT_DIR"
+# --- 7. Instalación de Dependencias y Carga de Esquema BD ---
+echo "--- Paso 7/8: Instalando dependencias e importando esquema de BD... ---"
+# Instalar dependencias de PHP
+export COMPOSER_HOME="$PROJECT_DIR/.composer"
+sudo -u www-data composer install --no-interaction --no-dev --optimize-autoloader -d "$PROJECT_DIR"
 echo "Dependencias de PHP instaladas."
 
+# Importar el esquema de la base de datos
+echo "Importando esquema de la base de datos..."
+sudo -u postgres psql -d "$DB_NAME" < "$PROJECT_DIR/database_schema.sql"
+echo "Esquema de la base de datos importado."
+
 # --- 8. Configuración de Nginx ---
-echo "--- Paso 8/7: Configurando Nginx... ---"
+echo "--- Paso 8/8: Configurando Nginx... ---"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN_NAME.conf"
 
 # Usar un 'heredoc' para crear el archivo de configuración
@@ -174,10 +184,8 @@ echo " - Usuario de la base de datos: $DB_USER"
 echo ""
 echo "Acciones manuales requeridas:"
 echo "1. Edita el archivo '$PROJECT_DIR/.env' y añade tu 'HCAPTCHA_SECRET_KEY'."
-echo "2. Configura un certificado SSL (HTTPS) para tu dominio (recomendado usando Certbot)."
+echo "2. Configura un certificado SSL (HTTPS) para tu dominio (recomendado usando Certbot):"
 echo "   sudo apt install certbot python3-certbot-nginx"
 echo "   sudo certbot --nginx -d $DOMAIN_NAME -d www.$DOMAIN_NAME"
-echo "3. Importa el esquema de la base de datos con el siguiente comando:"
-echo "   sudo -u postgres psql -U $DB_USER -d $DB_NAME < \"$PROJECT_DIR/database_schema.sql\""
 
 exit 0

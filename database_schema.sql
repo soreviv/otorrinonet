@@ -7,18 +7,7 @@
 -- PostgreSQL 16.1
 -- ============================================
 
--- Crear la base de datos (ejecutar como superusuario)
--- CREATE DATABASE otorrinonet_db
---     WITH 
---     OWNER = drviverosorl
---     ENCODING = 'UTF8'
---     LC_COLLATE = 'es_MX.UTF-8'
---     LC_CTYPE = 'es_MX.UTF-8'
---     TABLESPACE = pg_default
---     CONNECTION LIMIT = -1;
 
--- Conectarse a la base de datos
-\c otorrinonet_db;
 
 -- ============================================
 -- TABLA: users (Usuarios del sistema - Admin)
@@ -441,8 +430,3 @@ COMMENT ON TABLE audit_log IS 'Registro de auditoría del sistema';
 -- ============================================
 -- FIN DEL SCRIPT
 -- ============================================
-
--- Verificar la creación de tablas
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public';
