@@ -8,8 +8,8 @@
 # 2. Clona el repositorio del proyecto (o usa el directorio actual).
 # 3. Configura la base de datos PostgreSQL (usuario y base de datos).
 # 4. Crea y configura el archivo de entorno .env.
-# 5. Instala dependencias de PHP con Composer.
-# 6. Configura los permisos de archivos y directorios.
+# 5. Configura los permisos de archivos y directorios.
+# 6. Instala dependencias de PHP con Composer.
 # 7. Crea y habilita el archivo de configuración del sitio en Nginx.
 # 8. Importa el esquema inicial de la base de datos.
 # ==============================================================================
@@ -32,7 +32,7 @@ set -e
 echo "--- Iniciando el despliegue de OtorrinoNet en $DOMAIN_NAME ---"
 
 # --- 1. Instalación de Dependencias del Servidor ---
-echo "--- Paso 1/7: Instalando dependencias del servidor... ---"
+echo "--- Paso 1/8: Instalando dependencias del servidor... ---"
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx git postgresql postgresql-contrib \
                     php$PHP_VERSION-fpm php$PHP_VERSION-pgsql php$PHP_VERSION-mbstring \
@@ -51,7 +51,7 @@ fi
 echo "Dependencias del servidor instaladas."
 
 # --- 2. Preparación del Directorio del Proyecto ---
-echo "--- Paso 2/7: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
+echo "--- Paso 2/8: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Clonando el repositorio..."
     sudo git clone "$REPO_URL" "$PROJECT_DIR"
@@ -61,10 +61,15 @@ else
 fi
 echo "Directorio del proyecto listo."
 
-# --- 3. Configuración de la Base de Datos ---
-echo "--- Paso 3/7: Configurando la base de datos PostgreSQL... ---"
+# --- 3. Configuración de Seguridad de Git ---
+echo "--- Paso 3/8: Configurando el directorio como seguro para Git... ---"
+sudo git config --global --add safe.directory $PROJECT_DIR
+echo "Directorio añadido a la configuración segura de Git."
+
+# --- 4. Configuración de la Base de Datos ---
+echo "--- Paso 4/8: Configurando la base de datos PostgreSQL... ---"
 read -s -p "Por favor, introduce una contraseña para el usuario de la base de datos ($DB_USER): " DB_PASSWORD
-echo ""
+echo
 
 # Crear usuario y base de datos si no existen
 if ! sudo -u postgres psql -t -c "\du" | grep -q $DB_USER; then
@@ -73,7 +78,7 @@ else
     echo "El usuario $DB_USER ya existe en PostgreSQL."
 fi
 
-if ! sudo -u postgres psql -lqt | cut -d '|' -f 1 | grep -qw $DB_NAME; then
+if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
     sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 else
@@ -81,8 +86,8 @@ else
 fi
 echo "Base de datos configurada."
 
-# --- 4. Configuración del Entorno (.env) ---
-echo "--- Paso 4/7: Configurando el archivo .env... ---"
+# --- 5. Configuración del Entorno (.env) ---
+echo "--- Paso 5/8: Configurando el archivo .env... ---"
 ENV_FILE="$PROJECT_DIR/.env"
 if [ ! -f "$ENV_FILE" ]; then
     sudo cp "$PROJECT_DIR/.env.example" "$ENV_FILE"
@@ -98,20 +103,20 @@ else
     echo "El archivo .env ya existe. Omitiendo creación."
 fi
 
-# --- 5. Instalación de Dependencias de PHP ---
-echo "--- Paso 5/7: Instalando dependencias de PHP con Composer... ---"
-sudo -u www-data composer install --no-dev --optimize-autoloader -d "$PROJECT_DIR"
-echo "Dependencias de PHP instaladas."
-
 # --- 6. Configuración de Permisos ---
-echo "--- Paso 6/7: Configurando permisos de archivos y directorios... ---"
+echo "--- Paso 6/8: Configurando permisos de archivos y directorios... ---"
 sudo chown -R www-data:www-data "$PROJECT_DIR"
 sudo find "$PROJECT_DIR" -type f -exec chmod 640 {} \;
 sudo find "$PROJECT_DIR" -type d -exec chmod 750 {} \;
 echo "Permisos configurados."
 
-# --- 7. Configuración de Nginx ---
-echo "--- Paso 7/7: Configurando Nginx... ---"
+# --- 7. Instalación de Dependencias de PHP ---
+echo "--- Paso 7/8: Instalando dependencias de PHP con Composer... ---"
+sudo -u www-data composer install --no-dev --optimize-autoloader -d "$PROJECT_DIR"
+echo "Dependencias de PHP instaladas."
+
+# --- 8. Configuración de Nginx ---
+echo "--- Paso 8/8: Configurando Nginx... ---"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN_NAME.conf"
 
 # Usar un 'heredoc' para crear el archivo de configuración
@@ -125,13 +130,13 @@ server {
     index index.php index.html index.htm;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        try_files \$uri \$uri/ /index.php?\$query_string;
     }
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php$PHP_VERSION-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
 
@@ -143,7 +148,7 @@ server {
     access_log /var/log/nginx/${PROJECT_NAME}_access.log;
 
     # CSP con nonce para mayor seguridad
-    add_header Content-Security-Policy "script-src 'self' 'nonce-{{NONCE}}' https://js.hcaptcha.com https://*.hcaptcha.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{{NONCE}}' https://cdn.jsdelivr.net; frame-src 'self' https://*.hcaptcha.com; connect-src 'self' https://*.hcaptcha.com; font-src 'self' data:; object-src 'none'";
+    add_header Content-Security-Policy "script-src 'self' 'nonce-{{NONCE}}' https://js.hcaptcha.com https://*.hcaptcha.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{{NONCE}}' https://cdn.jsdelivr.net; frame-src 'self' https://*.hcaptcha.com; connect-src 'self' https://*.hcaptcha.com; font-src 'self' data:; object-src 'none';";
 }
 EOF
 
@@ -161,8 +166,13 @@ echo "Nginx configurado."
 
 # --- Importar Esquema de la Base de Datos ---
 echo "--- Importando esquema de la base de datos... ---"
-sudo -u $DB_USER psql -d $DB_NAME < "$PROJECT_DIR/database_schema.sql"
-echo "Esquema de la base de datos importado."
+# Comprobación para evitar error si la tabla ya existe
+if sudo -u $DB_USER psql -d $DB_NAME -c '\dt' | grep -q 'appointments'; then
+    echo "El esquema de la base de datos parece ya haber sido importado. Omitiendo."
+else
+    sudo -u $DB_USER psql -d $DB_NAME < "$PROJECT_DIR/database_schema.sql"
+    echo "Esquema de la base de datos importado."
+fi
 
 echo ""
 echo "--- ¡Despliegue completado! ---"
