@@ -11,7 +11,6 @@
 # 5. Configura los permisos de archivos y directorios.
 # 6. Instala dependencias de PHP con Composer.
 # 7. Crea y habilita el archivo de configuración del sitio en Nginx.
-# 8. Importa el esquema inicial de la base de datos.
 # ==============================================================================
 
 # --- Configuración (ajusta estas variables si es necesario) ---
@@ -32,7 +31,7 @@ set -e
 echo "--- Iniciando el despliegue de OtorrinoNet en $DOMAIN_NAME ---"
 
 # --- 1. Instalación de Dependencias del Servidor ---
-echo "--- Paso 1/8: Instalando dependencias del servidor... ---"
+echo "--- Paso 1/7: Instalando dependencias del servidor... ---"
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx git postgresql postgresql-contrib unzip \
                     php$PHP_VERSION-fpm php$PHP_VERSION-pgsql php$PHP_VERSION-mbstring \
@@ -51,7 +50,7 @@ fi
 echo "Dependencias del servidor instaladas."
 
 # --- 2. Preparación del Directorio del Proyecto ---
-echo "--- Paso 2/8: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
+echo "--- Paso 2/7: Preparando el directorio del proyecto en $PROJECT_DIR... ---"
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Clonando el repositorio..."
     sudo git clone "$REPO_URL" "$PROJECT_DIR"
@@ -62,12 +61,12 @@ fi
 echo "Directorio del proyecto listo."
 
 # --- 3. Configuración de Seguridad de Git ---
-echo "--- Paso 3/8: Configurando el directorio como seguro para Git... ---"
+echo "--- Paso 3/7: Configurando el directorio como seguro para Git... ---"
 sudo git config --global --add safe.directory $PROJECT_DIR
 echo "Directorio añadido a la configuración segura de Git."
 
 # --- 4. Configuración de la Base de Datos ---
-echo "--- Paso 4/8: Configurando la base de datos PostgreSQL... ---"
+echo "--- Paso 4/7: Configurando la base de datos PostgreSQL... ---"
 read -s -p "Por favor, introduce una contraseña para el usuario de la base de datos ($DB_USER): " DB_PASSWORD
 echo
 
@@ -87,7 +86,7 @@ fi
 echo "Base de datos configurada."
 
 # --- 5. Configuración del Entorno (.env) ---
-echo "--- Paso 5/8: Configurando el archivo .env... ---"
+echo "--- Paso 5/7: Configurando el archivo .env... ---"
 ENV_FILE="$PROJECT_DIR/.env"
 if [ ! -f "$ENV_FILE" ]; then
     sudo cp "$PROJECT_DIR/.env.example" "$ENV_FILE"
@@ -104,19 +103,19 @@ else
 fi
 
 # --- 6. Configuración de Permisos ---
-echo "--- Paso 6/8: Configurando permisos de archivos y directorios... ---"
+echo "--- Paso 6/7: Configurando permisos de archivos y directorios... ---"
 sudo chown -R www-data:www-data "$PROJECT_DIR"
 sudo find "$PROJECT_DIR" -type f -exec chmod 640 {} \;
 sudo find "$PROJECT_DIR" -type d -exec chmod 750 {} \;
 echo "Permisos configurados."
 
 # --- 7. Instalación de Dependencias de PHP ---
-echo "--- Paso 7/8: Instalando dependencias de PHP con Composer... ---"
+echo "--- Paso 7/7: Instalando dependencias de PHP con Composer... ---"
 sudo -u www-data composer install --no-interaction --no-cache --no-dev --optimize-autoloader -d "$PROJECT_DIR"
 echo "Dependencias de PHP instaladas."
 
 # --- 8. Configuración de Nginx ---
-echo "--- Paso 8/8: Configurando Nginx... ---"
+echo "--- Paso 8/7: Configurando Nginx... ---"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN_NAME.conf"
 
 # Usar un 'heredoc' para crear el archivo de configuración
@@ -164,16 +163,6 @@ sudo systemctl restart php$PHP_VERSION-fpm
 
 echo "Nginx configurado."
 
-# --- Importar Esquema de la Base de Datos ---
-echo "--- Importando esquema de la base de datos... ---"
-# Comprobación para evitar error si la tabla ya existe
-if sudo -u postgres psql -U $DB_USER -d $DB_NAME -c '\dt' | grep -q 'appointments'; then
-    echo "El esquema de la base de datos parece ya haber sido importado. Omitiendo."
-else
-    sudo -u postgres psql -U $DB_USER -d $DB_NAME < "$PROJECT_DIR/database_schema.sql"
-    echo "Esquema de la base de datos importado."
-fi
-
 echo ""
 echo "--- ¡Despliegue completado! ---"
 echo ""
@@ -188,5 +177,7 @@ echo "1. Edita el archivo '$PROJECT_DIR/.env' y añade tu 'HCAPTCHA_SECRET_KEY'.
 echo "2. Configura un certificado SSL (HTTPS) para tu dominio (recomendado usando Certbot)."
 echo "   sudo apt install certbot python3-certbot-nginx"
 echo "   sudo certbot --nginx -d $DOMAIN_NAME -d www.$DOMAIN_NAME"
+echo "3. Importa el esquema de la base de datos con el siguiente comando:"
+echo "   sudo -u postgres psql -U $DB_USER -d $DB_NAME < \"$PROJECT_DIR/database_schema.sql\""
 
 exit 0
