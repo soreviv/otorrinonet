@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Create the contact_messages database table.
-     *
-     * Creates a table named `contact_messages` with columns: `id` (primary key),
-     * `name`, `email`, `phone`, `asunto`, `message`, and timestamp columns
-     * `created_at` and `updated_at`.
+     * Run the migrations.
      */
     public function up(): void
     {
