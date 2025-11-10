@@ -11,47 +11,16 @@ OtorrinoNet es una aplicación web para agendar citas médicas en un consultorio
 
 ---
 
-## Despliegue en Producción (Ubuntu 24.04)
-
-Este método utiliza un script para automatizar la configuración en un servidor limpio de Ubuntu 24.04.
-
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone https://github.com/soreviv/otorrinonet.git
-    cd otorrinonet
-    ```
-
-2.  **Hacer ejecutable y correr el script de despliegue:**
-    El script te pedirá la contraseña para el usuario de la base de datos durante la ejecución.
-    ```bash
-    chmod +x deploy.sh
-    sudo ./deploy.sh
-    ```
-
-3.  **Acciones manuales post-despliegue:**
-    Una vez que el script finalice, solo quedan dos pasos manuales:
-
-    -   **Añadir la clave de hCaptcha:**
-        Edita el archivo de entorno y añade tu clave secreta de hCaptcha.
-        ```bash
-        sudo nano /var/www/otorrinonet/.env
-        ```
-
-    -   **Configurar SSL (HTTPS):**
-        El script te proporcionará el comando exacto para instalar un certificado SSL gratuito con Certbot. Se recomienda encarecidamente hacerlo para proteger tu sitio.
-
----
-
 ## Instalación para Desarrollo Local
 
 Sigue estos pasos para configurar el proyecto en tu máquina local para desarrollo y pruebas.
 
 ### Prerrequisitos
 
-- PHP 8.0 o superior
+- PHP 8.2 o superior
 - PostgreSQL
 - Composer
-- Un servidor web como Nginx o Apache
+- Node.js & npm
 
 ### Pasos
 
@@ -64,22 +33,36 @@ Sigue estos pasos para configurar el proyecto en tu máquina local para desarrol
 2.  **Instalar dependencias:**
     ```bash
     composer install
+    npm install
     ```
 
-3.  **Configurar la base de datos:**
-    - Crea una base de datos en PostgreSQL.
-    - Importa el esquema desde `database_schema.sql`.
-
-4.  **Configurar el entorno:**
+3.  **Configurar el entorno:**
     - Copia `.env.example` a `.env`:
       ```bash
       cp .env.example .env
       ```
-    - Actualiza el archivo `.env` con las credenciales de tu base de datos local y tu clave de hCaptcha.
+    - Genera la clave de la aplicación:
+        ```bash
+        php artisan key:generate
+        ```
+    - Actualiza el archivo `.env` con las credenciales de tu base de datos local.
 
-5.  **Configurar el servidor web:**
-    - Apunta el Document Root de tu servidor web al directorio `public/`.
-    - Asegúrate de que el servidor esté configurado para procesar archivos PHP.
+4.  **Configurar la base de datos:**
+    - Crea una base de datos en PostgreSQL.
+    - Ejecuta las migraciones para crear las tablas:
+        ```bash
+        php artisan migrate
+        ```
+
+5.  **Compilar los assets:**
+    ```bash
+    npm run dev
+    ```
+
+6.  **Iniciar el servidor de desarrollo:**
+    ```bash
+    php artisan serve
+    ```
 
 ## Contribuciones
 
