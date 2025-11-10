@@ -16,9 +16,7 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Persist a new appointment from validated request data and redirect to the creation form with a success message.
-     *
-     * @return \Illuminate\Http\RedirectResponse Redirects to the 'appointment.create' route with a `'success'` flash message on successful creation.
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {

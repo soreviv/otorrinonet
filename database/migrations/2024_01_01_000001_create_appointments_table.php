@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Create the `appointments` table with columns for client contact, consultation type, motive, and scheduled date/time.
-     *
-     * The table includes: `id`, `name`, `phone`, `tipo_consulta`, `motivo`, `date`, `time`, `created_at`, and `updated_at`.
-     *
-     * @return void
+     * Run the migrations.
      */
     public function up(): void
     {
