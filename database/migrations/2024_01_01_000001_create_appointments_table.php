@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
+            $table->string('tipo_consulta');
+            $table->text('motivo');
             $table->date('date');
             $table->time('time');
             $table->timestamps();

@@ -23,6 +23,8 @@ class AppointmentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
+            'tipo_consulta' => 'required|string|max:255',
+            'motivo' => 'required|string',
             'date' => 'required|date',
             'time' => 'required',
         ]);

@@ -11,6 +11,8 @@
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">Name</th>
                         <th class="py-3 px-6 text-left">Phone</th>
+                        <th class="py-3 px-6 text-left">Consultation Type</th>
+                        <th class="py-3 px-6 text-left">Reason</th>
                         <th class="py-3 px-6 text-center">Date</th>
                         <th class="py-3 px-6 text-center">Time</th>
                     </tr>
@@ -20,6 +22,8 @@
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6 text-left whitespace-nowrap">{{ $appointment->name }}</td>
                             <td class="py-3 px-6 text-left">{{ $appointment->phone }}</td>
+                            <td class="py-3 px-6 text-left">{{ $appointment->tipo_consulta }}</td>
+                            <td class="py-3 px-6 text-left">{{ $appointment->motivo }}</td>
                             <td class="py-3 px-6 text-center">{{ $appointment->date }}</td>
                             <td class="py-3 px-6 text-center">{{ $appointment->time }}</td>
                         </tr>

@@ -10,7 +10,9 @@
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">Name</th>
+                        <th class="py-3 px-6 text-left">Email</th>
                         <th class="py-3 px-6 text-left">Phone</th>
+                        <th class="py-3 px-6 text-left">Subject</th>
                         <th class="py-3 px-6 text-left">Message</th>
                     </tr>
                 </thead>
@@ -18,7 +20,9 @@
                     @foreach($messages as $message)
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6 text-left whitespace-nowrap">{{ $message->name }}</td>
+                            <td class="py-3 px-6 text-left">{{ $message->email }}</td>
                             <td class="py-3 px-6 text-left">{{ $message->phone }}</td>
+                            <td class="py-3 px-6 text-left">{{ $message->asunto }}</td>
                             <td class="py-3 px-6 text-left">{{ $message->message }}</td>
                         </tr>
                     @endforeach
