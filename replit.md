@@ -11,10 +11,11 @@ OtorrinoNet is a Laravel 11 medical appointment booking application for an otorh
   - Installed PHP and Node.js dependencies
   - Created EventServiceProvider for Laravel compatibility
   - Fixed package.json duplicate entries
-  - Configured Vite to run on port 5000 with host 0.0.0.0
-  - Set up workflow to run Laravel backend (port 8000) and Vite frontend (port 5000)
+  - Configured Vite to run on port 5173 with HMR support for Replit
+  - Set up workflow to run Laravel frontend (port 5000) and Vite dev server (port 5173)
   - Created comprehensive .gitignore for Laravel and Node.js
   - Generated Laravel application key
+  - Updated Blade layouts to use @vite directive for proper asset loading
 
 ## Project Architecture
 
@@ -24,8 +25,8 @@ OtorrinoNet is a Laravel 11 medical appointment booking application for an otorh
 - **Database:** PostgreSQL (Neon-hosted)
 
 ### Port Configuration
-- **Frontend (Vite):** Port 5000 on 0.0.0.0 (public-facing)
-- **Backend (Laravel):** Port 8000 on 127.0.0.1 (internal)
+- **Frontend (Laravel):** Port 5000 on 0.0.0.0 (public-facing)
+- **Vite Dev Server:** Port 5173 on 0.0.0.0 (for asset serving and HMR)
 
 ### Key Files
 - `vite.config.js` - Vite configuration for Replit environment
