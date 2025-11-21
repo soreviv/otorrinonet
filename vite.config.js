@@ -8,4 +8,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: process.env.REPLIT_DEV_DOMAIN || 'localhost',
+            protocol: process.env.REPLIT_DEV_DOMAIN ? 'wss' : 'ws',
+            clientPort: process.env.REPLIT_DEV_DOMAIN ? 443 : 5173,
+        },
+    },
 });
