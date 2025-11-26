@@ -1,5 +1,7 @@
 #!/bin/bash
 
+php artisan migrate --force
+
 npm run dev &
 VITE_PID=$!
 
