@@ -19,9 +19,9 @@ The current Nginx configuration is blocking the loading of CSS and JavaScript fi
 1. Open your Nginx configuration file (e.g., `/etc/nginx/sites-available/otorrinonet` or `/etc/nginx/sites-enabled/default`).
 2. Add or update the `add_header Content-Security-Policy` directive inside the `server` block.
 
-### Recommended Configuration
+### Production Configuration (Recommended)
 
-Use the following configuration to allow scripts and styles from the same origin ('self').
+Use this configuration for your live site. It is secure and allows only trusted resources from the same origin (`'self'`), blocking unsafe inline scripts/styles and `eval`.
 
 ```nginx
 server {
@@ -30,13 +30,11 @@ server {
     root /var/www/otorrinonet/public;
     index index.php index.html index.htm;
 
-    # Basic CSP to allow Vite assets
-    # 'self' allows resources from the same domain.
-    # 'unsafe-inline' is often needed for styles injected by JS or some Tailwind setups,
-    # but strictly speaking, a production build of Vite + Tailwind should work with just 'self' for styles if main.css is a file.
-    # If you still see errors, you can add 'unsafe-inline' to style-src.
-
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';";
+    # Secure CSP for Production
+    # default-src 'self': Only allow resources from the same domain by default.
+    # script-src 'self': Only allow scripts from the same domain (no inline scripts, no eval).
+    # style-src 'self': Only allow stylesheets from the same domain (no inline styles).
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';";
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -46,7 +44,15 @@ server {
 }
 ```
 
-**Note on `unsafe-eval`:** Vite (especially in development or some legacy modes) might use eval. If you are running a production build (`npm run build`), you strictly shouldn't need `'unsafe-eval'`, but if you encounter issues, you can temporarily allow it as shown above. Ideally, remove `'unsafe-eval'` if everything works without it.
+### Development/Debugging Configuration
+
+You may temporarily enable this permissive configuration if you are debugging issues or if your build process has failed to extract all styles/scripts correctly. **Remove these allowances after fixing the underlying issue.**
+
+```nginx
+    # Permissive CSP for Debugging
+    # Includes 'unsafe-inline' and 'unsafe-eval' to identify if strict rules are breaking the site.
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';";
+```
 
 3. Test and reload Nginx:
 
