@@ -54,7 +54,7 @@ You may temporarily enable this permissive configuration if you are debugging is
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';";
 ```
 
-3. Test and reload Nginx:
+1. Test and reload Nginx:
 
 ```bash
 sudo nginx -t
