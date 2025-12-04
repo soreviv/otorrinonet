@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::get('/appointment', [AppointmentController::class, 'create'])->name('appointment.create');
 Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
+Route::get('/appointment/slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointment.slots');
 
 Route::get('/contact', [ContactMessageController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
