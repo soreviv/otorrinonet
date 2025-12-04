@@ -16,7 +16,11 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena una nueva cita creada a partir de los datos de la petición.
+     *
+     * Valida los campos obligatorios y crea un registro de Appointment con los datos validados.
+     *
+     * @return \Illuminate\Http\RedirectResponse Redirección a la ruta `appointment.create` con un mensaje de éxito.
      */
     public function store(Request $request)
     {
@@ -35,7 +39,14 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Get available slots for a given date.
+     * Devuelve las franjas horarias disponibles de 30 minutos para una fecha dada.
+     *
+     * Genera intervalos entre las 16:00 y las 19:30 (cada 30 minutos) y excluye los horarios ya reservados
+     * para la fecha solicitada. Solo considera fechas que caigan en lunes, martes o miércoles; para otras fechas
+     * devuelve un array vacío.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON con la clave `slots` cuyo valor es un array de cadenas en formato `HH:MM`
+     *                                     que representan las franjas disponibles (puede ser un array vacío).
      */
     public function getAvailableSlots(Request $request)
     {

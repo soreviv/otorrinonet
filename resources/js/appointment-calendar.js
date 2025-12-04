@@ -29,6 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
+    /**
+     * Maneja la selección de una fecha: reinicia la interfaz, solicita los huecos disponibles y actualiza la vista.
+     *
+     * Reinicia el área de huecos y el formulario (muestra mensaje de carga, limpia la hora, establece la fecha y deshabilita el botón de envío), realiza una petición GET a `window.slotsRoute` pasando la fecha como parámetro, y luego renderiza los huecos recibidos o muestra un mensaje de error si la petición falla.
+     *
+     * @param {string} dateStr - Fecha seleccionada en formato `YYYY-MM-DD`.
+     */
     function handleDateSelection(dateStr) {
         // Reset slots and form
         slotsGrid.innerHTML = '<p class="text-gray-500 col-span-3">Loading slots...</p>';
@@ -52,6 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Rellena la cuadrícula de franjas horarias para la fecha indicada y configura la interacción de selección.
+     *
+     * Vacía el contenedor de slots; si no hay franjas, muestra un mensaje de "No available slots". Si existen
+     * franjas, crea un botón por cada hora disponible, los añade al DOM y asocia el manejador que permite seleccionar
+     * esa franja.
+     *
+     * @param {string[]} slots - Array de horas disponibles como cadenas (por ejemplo "14:00").
+     * @param {string} dateStr - Fecha seleccionada en formato de cadena (por ejemplo "YYYY-MM-DD").
+     */
     function renderSlots(slots, dateStr) {
         slotsGrid.innerHTML = '';
 
@@ -70,6 +87,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Selecciona un intervalo horario en la interfaz y sincroniza el estado visual y de formulario.
+     *
+     * Aplica el estilo activo al botón de hora seleccionado, quita el estilo activo de los demás
+     * botones, establece el valor del input de tiempo, habilita el botón de envío y actualiza
+     * la zona de visualización con la fecha y hora seleccionadas.
+     *
+     * @param {HTMLButtonElement} btn - Botón de slot que se ha pulsado.
+     * @param {string} dateStr - Fecha seleccionada como cadena (por ejemplo "2025-12-04").
+     * @param {string} time - Hora seleccionada como cadena (por ejemplo "14:30").
+     */
     function selectSlot(btn, dateStr, time) {
         // Remove active class from all buttons
         const allBtns = slotsGrid.querySelectorAll('button');
@@ -89,6 +117,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateDisplay(dateStr, time);
     }
 
+    /**
+     * Actualiza el elemento de visualización con la fecha y/o la hora seleccionada y ajusta los estilos visuales.
+     *
+     * @param {string|null} date - Fecha seleccionada como cadena (por ejemplo "2025-12-04"); si es null o vacío se interpreta como no seleccionada.
+     * @param {string|null} time - Hora seleccionada como cadena (por ejemplo "14:30"); si es null o vacío se interpreta como no seleccionada.
+     */
     function updateDisplay(date, time) {
         if (date && time) {
             displayEl.textContent = `${date} at ${time}`;
