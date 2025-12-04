@@ -16,7 +16,12 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Valida los datos de entrada, crea una nueva cita y redirige al formulario con un mensaje de éxito.
+     *
+     * Valida los campos `name`, `phone`, `tipo_consulta`, `motivo`, `date` y `time`, persiste la cita usando
+     * asignación masiva y añade un mensaje flash de éxito antes de redirigir a la ruta `appointment.create`.
+     *
+     * @return \Illuminate\Http\RedirectResponse Respuesta que redirige a la ruta `appointment.create` con un flash `success` cuyo valor es "Appointment booked successfully!".
      */
     public function store(Request $request)
     {
@@ -35,7 +40,14 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Get available slots for a given date.
+     * Obtiene los huecos de cita disponibles para una fecha dada.
+     *
+     * Valida que el parámetro `date` esté presente y sea una fecha, limita la búsqueda a los días
+     * lunes, martes y miércoles, y devuelve los intervalos de 30 minutos entre las 16:00 y las 19:30
+     * que no estén ocupados por citas existentes.
+     *
+     * @param \Illuminate\Http\Request $request Request que debe incluir el campo `date` con una fecha válida.
+     * @return \Illuminate\Http\JsonResponse Respuesta JSON con la clave `slots` que contiene un array de cadenas en formato `HH:MM` con los horarios disponibles.
      */
     public function getAvailableSlots(Request $request)
     {
