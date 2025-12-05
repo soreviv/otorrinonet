@@ -37,7 +37,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
-/public/build
+# /public/build  # Uncommented to include built assets in repo for deployment
 /build
 /dist
 
