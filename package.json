@@ -12,7 +12,11 @@
         "lodash": "^4.17.19",
         "postcss": "^8.4.47",
         "tailwindcss": "^3.4.13",
+<<<<<<< HEAD
         "vite": "^7.2.6",
+=======
+        "vite": "^6.2.3",
+>>>>>>> origin/main
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.15",
         "@fullcalendar/interaction": "^6.1.15"
