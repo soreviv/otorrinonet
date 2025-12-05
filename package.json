@@ -12,7 +12,7 @@
         "lodash": "^4.17.19",
         "postcss": "^8.4.47",
         "tailwindcss": "^3.4.13",
-        "vite": "^6.2.3",
+        "vite": "^7.2.6",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.15",
         "@fullcalendar/interaction": "^6.1.15"

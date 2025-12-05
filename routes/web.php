@@ -6,7 +6,10 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'hospital_name' => 'Hospital Ángeles Lindavista',
+        'cofepris_registration' => '123456789'
+    ]);
 });
 
 Route::get('/servicios', function () {

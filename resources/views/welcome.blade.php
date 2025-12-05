@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Bienvenido a OtorrinoNet')
+@section('title', 'Bienvenido a OtorrinoNet')
 
 @section('content')
 <!-- Hero Section -->
@@ -27,8 +28,8 @@
                 <p class="mb-4">Médico especialista en Otorrinolaringología y Cirugía de Cabeza y Cuello con más de 10 años de experiencia.</p>
                 <p class="mb-4">Cédula profesional: 6277305</p>
                 <p class="mb-4">Cédula de especialidad: 10148701</p>
-                <p class="mb-4">Adscripción hospitalaria: [Nombre del hospital]</p>
-                <p>Registro COFEPRIS: [Número de registro]</p>
+                <p class="mb-4">Adscripción hospitalaria: {{ $hospital_name ?? '[Nombre del hospital]' }}</p>
+                <p>Registro COFEPRIS: {{ $cofepris_registration ?? '[Número de registro]' }}</p>
             </div>
         </div>
     </div>
@@ -56,7 +57,7 @@
             </div>
         </div>
         <div class="text-center mt-8">
-            <a href="/servicios" class="text-blue-600 hover:text-blue-800 font-bold">Ver todos los servicios &rarr;</a>
+            <a href="{{ route('services') }}" class="text-blue-600 hover:text-blue-800 font-bold">Ver todos los servicios &rarr;</a>
         </div>
     </div>
 </section>
@@ -82,5 +83,6 @@
             </div>
         </div>
     </div>
+</section>
 </section>
 @endsection
