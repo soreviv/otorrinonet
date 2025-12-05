@@ -6,11 +6,19 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'hospital_name' => config('hospital.name', 'Hospital Ángeles Lindavista'),
+        'cofepris_registration' => config('hospital.registration', '123456789')
+    ]);
 });
+
+Route::get('/servicios', function () {
+    return view('services');
+})->name('services');
 
 Route::get('/appointment', [AppointmentController::class, 'create'])->name('appointment.create');
 Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
+Route::get('/appointment/slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointment.slots');
 
 Route::get('/contact', [ContactMessageController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
