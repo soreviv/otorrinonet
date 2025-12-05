@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Bienvenido a OtorrinoNet')
-@section('title', 'Bienvenido a OtorrinoNet')
 
 @section('content')
 <!-- Hero Section -->
@@ -83,6 +82,5 @@
             </div>
         </div>
     </div>
-</section>
 </section>
 @endsection

@@ -7,8 +7,8 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome', [
-        'hospital_name' => 'Hospital Ángeles Lindavista',
-        'cofepris_registration' => '123456789'
+        'hospital_name' => config('hospital.name', 'Hospital Ángeles Lindavista'),
+        'cofepris_registration' => config('hospital.registration', '123456789')
     ]);
 });
 

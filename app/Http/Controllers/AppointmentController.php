@@ -53,9 +53,7 @@ class AppointmentController extends Controller
         $slots = Cache::remember('appointment_slots_' . $date, 300, function () use ($date) {
             $dayOfWeek = date('N', strtotime($date)); // 1 (Mon) - 7 (Sun)
 
-            // Configuration: Mon (1), Tue (2), Wed (3)
-            // Time: 16:00 to 19:30
-            $allowedDays = [1, 2, 3];
+            $allowedDays = config('appointments.allowed_days');
 
             if (!in_array($dayOfWeek, $allowedDays)) {
                 return [];

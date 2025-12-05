@@ -28,6 +28,13 @@ class ContactMessageController extends Controller
             'message' => 'required|string',
         ]);
 
+        // Sanitize input to remove HTML tags
+        $validated['name'] = strip_tags($validated['name']);
+        $validated['email'] = strip_tags($validated['email']);
+        $validated['phone'] = strip_tags($validated['phone']);
+        $validated['asunto'] = strip_tags($validated['asunto']);
+        $validated['message'] = strip_tags($validated['message']);
+
         ContactMessage::create($validated);
 
         return redirect()->route('contact.create')->with('success', 'Message sent successfully!');
