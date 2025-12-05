@@ -9,6 +9,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/servicios', function () {
+    return view('services');
+})->name('services');
+
 Route::get('/appointment', [AppointmentController::class, 'create'])->name('appointment.create');
 Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
 Route::get('/appointment/slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointment.slots');
