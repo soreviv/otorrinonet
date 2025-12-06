@@ -37,7 +37,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
-/public/build
 /build
 /dist
 
